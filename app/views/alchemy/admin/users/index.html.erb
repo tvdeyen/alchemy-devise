@@ -15,7 +15,7 @@
   ]
 ) %>
 
-<div id="archive_all" class="resources-table-wrapper">
+<div id="archive_all" class="resources-table-wrapper<%= ' with_tag_filter' if resource_has_tags %>">
   <%= resources_header %>
 <% if @users.any? %>
 
@@ -50,6 +50,12 @@
   </table>
 
   <%= paginate @users, theme: 'alchemy' %>
+
+  <% if resource_has_tags %>
+    <div id="library_sidebar">
+      <%= render 'tag_list' %>
+    </div>
+  <% end %>
 
 <% elsif params[:query] %>
 

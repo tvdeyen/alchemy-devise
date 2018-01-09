@@ -16,8 +16,10 @@ module Alchemy
         @query = User.ransack(params[:q])
         @query.sorts = 'login asc' if @query.sorts.empty?
         @users = @query.result
-          .page(params[:page] || 1)
-          .per(per_page_value_for_screen_size)
+        if params[:tagged_with].present?
+          @users = @users.tagged_with(params[:tagged_with])
+        end
+        @users = @users.page(params[:page] || 1).per(per_page_value_for_screen_size)
       end
 
       def new
