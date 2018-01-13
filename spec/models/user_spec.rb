@@ -72,11 +72,18 @@ module Alchemy
     end
 
     describe 'scopes' do
-      let(:user) { create(:alchemy_admin_user) }
+      let!(:user) { create(:alchemy_admin_user) }
+      let!(:member) { create(:alchemy_user, alchemy_roles: %w(member)) }
 
       describe '.admins' do
         it "should only return users with admin role" do
-          expect(User.admins).to include(user)
+          expect(User.admins).to contain_exactly(user)
+        end
+      end
+
+      describe '.with_role' do
+        it "should only return users with given role" do
+          expect(User.with_role(:member)).to contain_exactly(member)
         end
       end
     end
