@@ -20,6 +20,21 @@ RSpec.describe Alchemy::Admin::UsersController, type: :request do
     end
   end
 
+  describe 'filtered by role' do
+    let!(:user_a) { create(:alchemy_user, alchemy_roles: %w(customer)) }
+    let!(:user_b) { create(:alchemy_user, alchemy_roles: %w(visitor)) }
+
+    subject do
+      get admin_users_path(with_role: 'customer')
+      response.body
+    end
+
+    it 'only lists users with requested role' do
+      is_expected.to match user_a.email
+      is_expected.not_to match user_b.email
+    end
+  end
+
   context 'with error happening while sending mail' do
     before do
       allow_any_instance_of(Alchemy::Admin::BaseController).

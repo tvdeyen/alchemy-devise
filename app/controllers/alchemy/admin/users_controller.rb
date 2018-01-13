@@ -19,6 +19,9 @@ module Alchemy
         if params[:tagged_with].present?
           @users = @users.tagged_with(params[:tagged_with])
         end
+        if params[:with_role].present?
+          @users = @users.with_role(params[:with_role])
+        end
         @users = @users.page(params[:page] || 1).per(per_page_value_for_screen_size)
       end
 

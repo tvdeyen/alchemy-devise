@@ -33,13 +33,17 @@ module Alchemy
     before_destroy :unlock_pages!
 
     scope :admins,     -> { with_role(:admin) }
-    scope :with_role,  ->(role) { where(arel_table[:alchemy_roles].matches("%#{role}%")) }
+    scope :with_role,  ->(role) { where(arel_table[:alchemy_roles].includes(role)) }
     scope :logged_in,  -> { where('last_request_at > ?', logged_in_timeout.seconds.ago) }
     scope :logged_out, -> { where('last_request_at is NULL or last_request_at <= ?', logged_in_timeout.seconds.ago) }
 
     ROLES = Config.get(:user_roles)
 
     class << self
+      def roles
+        pluck(:alchemy_roles).uniq
+      end
+
       def human_rolename(role)
         Alchemy.t("user_roles.#{role}")
       end
@@ -82,18 +86,19 @@ module Alchemy
     end
 
     def alchemy_roles=(roles_string)
-      if roles_string.is_a? Array
-        write_attribute(:alchemy_roles, roles_string.join(' '))
-      elsif roles_string.is_a? String
-        write_attribute(:alchemy_roles, roles_string)
+      case roles_string
+      when Array
+        write_attribute(:alchemy_roles, roles_string.map(&:strip).join(' '))
+      when String
+        write_attribute(:alchemy_roles, roles_string.strip)
       end
     end
 
     def add_role(role)
-      self.alchemy_roles = self.alchemy_roles.push(role.to_s).uniq
+      self.alchemy_roles = self.alchemy_roles.push(role.to_s.strip).uniq
     end
 
-    # Returns true if the user ahs admin role
+    # Returns true if the user has admin role
     def is_admin?
       has_role? 'admin'
     end

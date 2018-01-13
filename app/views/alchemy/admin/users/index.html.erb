@@ -51,11 +51,13 @@
 
   <%= paginate @users, theme: 'alchemy' %>
 
-  <% if resource_has_tags %>
-    <div id="library_sidebar">
+  <div id="library_sidebar">
+    <%= render 'filter_bar' %>
+
+    <% if resource_has_tags %>
       <%= render 'tag_list' %>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 
 <% elsif params[:query] %>
 
