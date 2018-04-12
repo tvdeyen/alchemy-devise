@@ -6,5 +6,8 @@
   <% end %>
   <%= alchemy_form_for [:admin, @user] do |f| %>
     <%= render 'fields', f: f %>
+    <div class="submit">
+      <button class="secondary"><%= Alchemy.t(:save) %></button>
+    </div>
   <% end %>
 </div>

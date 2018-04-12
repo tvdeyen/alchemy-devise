@@ -1,3 +1,4 @@
 <%= alchemy_form_for [:admin, @user] do |f| %>
   <%= render 'fields', f: f %>
+  <%= f.submit Alchemy.t(:save) %>
 <% end %>

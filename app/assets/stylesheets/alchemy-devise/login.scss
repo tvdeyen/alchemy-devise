@@ -1,5 +1,6 @@
 body.user_sessions,
-body.passwords {
+body.passwords,
+body.users {
   background-color: $main-menu-bg-color;
   color: $white;
 
@@ -14,6 +15,12 @@ body.passwords {
 
   #errors {
     margin-left: 157px;
+  }
+
+  .field_with_errors {
+    label, .error {
+      color: lighten($error_background_color, 8%);
+    }
   }
 }
 
